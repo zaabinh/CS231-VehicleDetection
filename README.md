@@ -115,7 +115,6 @@ CS231-VehicleCounting/
 │   ├── FasterRCNN/
 │   │   └── FasterRCNN_main.ipynb
 │   ├── HOG_SVM/
-│   │   ├── HOG_AND_SVM .ipynb
 │   │   └── hog_svm_vehicle_detection.ipynb
 │   ├── SSD/
 │   │   └── SSD_main.ipynb
