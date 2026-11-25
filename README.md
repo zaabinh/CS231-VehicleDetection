@@ -1,174 +1,91 @@
-﻿# Xây dựng hệ thống phát hiện và phân loại phương tiện giao thông trong ảnh
+# Vehicle Detection Benchmark
 
-## Giới thiệu
+A comparative computer vision study of classical and deep learning object detectors for identifying vehicles in traffic surveillance images.
 
-Đây là đồ án cuối kỳ môn **Nhập môn Thị giác máy tính** tại Trường Đại học Công nghệ Thông tin - Đại học Quốc gia Thành phố Hồ Chí Minh.
+**Best reported result:** 95.38% mAP@0.50 · 76.19% mAP@0.50:0.95 (YOLOv8)
 
-Mục tiêu của đề tài là xây dựng và đánh giá các phương pháp phát hiện đối tượng (Object Detection) nhằm nhận diện và phân loại các phương tiện giao thông trong ảnh, bao gồm:
+**Stack:** Python · OpenCV · HOG/SVM · SSD · Faster R-CNN · YOLOv8 · Jupyter
 
-- Car
-- Motorbike
-- Truck
-- Bus
+## Overview
 
-Đề tài tiến hành so sánh hiệu năng của bốn phương pháp:
+The project investigates accuracy and inference-speed trade-offs across four vehicle detection approaches, from handcrafted features to modern deep learning architectures. Given a traffic image, the output is a set of bounding boxes and vehicle class predictions.
 
-- HOG + SVM
-- SSD (Single Shot MultiBox Detector)
-- Faster R-CNN
-- YOLOv8
+## Dataset
 
----
+The [Vehicle Detection Dataset](https://universe.roboflow.com/skripsi-1qzlz/vehicle-detection-bvxpr) on Roboflow contains approximately 1,000 traffic images collected from public traffic cameras in Yogyakarta, Indonesia. Annotations are provided in YOLO format for four classes: `car`, `motorbike`, `truck`, and `bus`.
 
-## Tập dữ liệu
+## Methodology
 
-Dataset sử dụng trong đề tài:
-
-**Vehicle Detection Dataset**
-
-Nguồn:  
-https://universe.roboflow.com/skripsi-1qzlz/vehicle-detection-bvxpr
-
-Đặc điểm:
-
-- Khoảng 1000 ảnh giao thông thực tế.
-- Thu thập từ camera giao thông công cộng tại Yogyakarta, Indonesia.
-- Định dạng nhãn YOLO.
-- 4 lớp đối tượng:
-  - Car
-  - Motorbike
-  - Truck
-  - Bus
-
----
-
-## Các phương pháp thực nghiệm
-
-### 1. HOG + SVM
-
-Phương pháp học máy truyền thống:
-
-- Trích xuất đặc trưng bằng Histogram of Oriented Gradients (HOG).
-- Phân loại bằng Support Vector Machine (SVM).
-- Sử dụng Sliding Window và Non-Maximum Suppression (NMS) để phát hiện đối tượng.
-
-### 2. SSD
-
-Mô hình Object Detection một giai đoạn:
-
-- Backbone VGG16.
-- Multi-scale Feature Maps.
-- Default Boxes (Anchor Boxes).
-- Tốc độ suy luận nhanh, phù hợp thời gian thực.
-
-### 3. Faster R-CNN
-
-Mô hình Object Detection hai giai đoạn:
-
-- CNN Backbone.
-- Region Proposal Network (RPN).
-- ROI Pooling.
-- Classification và Bounding Box Regression.
-
-### 4. YOLOv8
-
-Mô hình được lựa chọn làm phương pháp chính:
-
-- Backbone C2f + SPPF.
-- Anchor-free Detection Head.
-- Hỗ trợ phát hiện đa tỉ lệ.
-- Tốc độ suy luận cao và độ chính xác vượt trội.
-
----
-
-## Kết quả thực nghiệm
-
-| Phương pháp  | Precision | Recall | mAP50  | mAP50-95 | FPS    |
-| ------------ | --------- | ------ | ------ | -------- | ------ |
-| HOG + SVM    | 4.30%     | 0.62%  | 0.12%  | 0.03%    | 5.00   |
-| SSD          | 38.70%    | 38.60% | 79.20% | 54.60%   | 26.00  |
-| Faster R-CNN | 39.62%    | 39.81% | 91.79% | 67.43%   | 12.21  |
-| YOLOv8       | 94.56%    | 90.72% | 95.38% | 76.19%   | 142.68 |
-
-### Nhận xét
-
-- HOG + SVM có hiệu năng thấp khi áp dụng cho bài toán giao thông thực tế.
-- SSD đạt tốc độ xử lý tốt nhưng độ chính xác còn hạn chế.
-- Faster R-CNN cho độ chính xác cao nhưng tốc độ suy luận thấp.
-- YOLOv8 đạt sự cân bằng tốt nhất giữa độ chính xác và tốc độ xử lý.
-
----
-
-## Cấu trúc thư mục
-
-```text
-CS231-VehicleCounting/
-├── data/
-├── models/
-│   ├── best_FasterRCNN.pth
-│   ├── best_hog_svm.pkl
-│   ├── best_SSD.pth
-│   └── yolov8.pt
-├── notebooks/
-│   ├── EDA_main.ipynb
-│   ├── deployment.ipynb
-│   ├── FasterRCNN/
-│   │   └── FasterRCNN_main.ipynb
-│   ├── HOG_SVM/
-│   │   └── hog_svm_vehicle_detection.ipynb
-│   ├── SSD/
-│   │   └── SSD_main.ipynb
-│   └── YOLOv8/
-│       ├── yolov8_aug_main.ipynb
-│       └── yolov8_no_aug_main.ipynb
-├── .gitattributes
-├── .gitignore
-└── README.md
+```mermaid
+flowchart TD
+    A[Traffic images and annotations] --> B[EDA and data preparation]
+    B --> C[HOG + SVM]
+    B --> D[SSD]
+    B --> E[Faster R-CNN]
+    B --> F[YOLOv8]
+    C --> G[Evaluation]
+    D --> G
+    E --> G
+    F --> G
+    G --> H[Accuracy and inference-speed comparison]
 ```
 
----
+| Method | Approach |
+| --- | --- |
+| HOG + SVM | Handcrafted gradient features, sliding windows and non-maximum suppression |
+| SSD | Single-stage detector with multi-scale features and default boxes |
+| Faster R-CNN | Two-stage detector with region proposals and bounding-box refinement |
+| YOLOv8 | Anchor-free, single-stage deep learning detector |
 
-## Cài đặt môi trường
+## Experimental results
 
-Tạo môi trường Python:
+| Method | Precision | Recall | mAP@0.50 | mAP@0.50:0.95 | FPS |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| HOG + SVM | 4.30% | 0.62% | 0.12% | 0.03% | 5.00 |
+| SSD | 38.70% | 38.60% | 79.20% | 54.60% | 26.00 |
+| Faster R-CNN | 39.62% | 39.81% | 91.79% | 67.43% | 12.21 |
+| **YOLOv8** | **94.56%** | **90.72%** | **95.38%** | **76.19%** | **142.68** |
 
-```bash
-python -m venv venv
-```
+Values are the original team-reported experimental results, not newly reproduced measurements. YOLOv8 achieved the highest reported accuracy and throughput among the tested configurations. Faster R-CNN achieved strong mAP but lower reported throughput, while the handcrafted baseline performed poorly on this dataset.
 
-Kích hoạt môi trường:
+FPS depends on hardware, image size, batch size, preprocessing and timing boundaries. Precision and recall can also depend on operating thresholds. The table should not be interpreted as a hardware-normalized benchmark until the evaluation protocols have been reconciled across implementations.
 
-Windows:
+## Reproduce the experiments
 
-```bash
-venv\Scripts\activate
-```
-
-Linux / macOS:
-
-```bash
-source venv/bin/activate
-```
-
-Cài đặt thư viện:
+Clone the repository and install the declared dependencies in a virtual environment:
 
 ```bash
+git clone https://github.com/zaabinh/CS231-VehicleDetection.git
+cd CS231-VehicleDetection
+python -m venv .venv
+source .venv/bin/activate  # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-## Thành viên thực hiện
+Download the dataset from Roboflow, update notebook paths as needed and ensure the PyTorch/CUDA environment matches the selected runtime. Execute the notebooks for the desired method.
 
-- Đoàn Hữu Gia Bình - 24520192
-- Phan Công Thiện - 24521665
-- Nguyễn Tấn Phát - 24521305
-- Nguyễn Trường Nguyên - 24521200
+| Stage | Notebook |
+| --- | --- |
+| Dataset analysis | [EDA](notebooks/EDA_main.ipynb) |
+| HOG + SVM | [Classical detector](notebooks/HOG_SVM/hog_svm_vehicle_detection.ipynb) |
+| SSD | [SSD experiment](notebooks/SSD/SSD_main.ipynb) |
+| Faster R-CNN | [Faster R-CNN experiment](notebooks/FasterRCNN/FasterRCNN_main.ipynb) |
+| YOLOv8 | [With augmentation](notebooks/YOLOv8/yolov8_aug_main.ipynb) · [Without augmentation](notebooks/YOLOv8/yolov8_no_aug_main.ipynb) |
+| Inference demonstration | [Deployment notebook](notebooks/deployment.ipynb) |
 
-Giảng viên hướng dẫn:
+Model artifacts may require Git LFS or separate downloads; inspect the repository before running inference. The inference notebook is not evidence of a live deployed service.
 
-- ThS. Mai Tiến Dũng
+## Limitations and future work
 
----
+The study focuses on image-level detection rather than tracking identities across video frames. Future experiments should standardize inference hardware and timing, validate on independent traffic datasets and investigate difficult conditions such as occlusion, small objects and illumination changes.
 
-## Kết luận
+## Contributors
 
-Đề tài đã xây dựng thành công hệ thống phát hiện và phân loại phương tiện giao thông dựa trên các kỹ thuật Thị giác máy tính hiện đại. Kết quả thực nghiệm cho thấy YOLOv8 là phương pháp phù hợp nhất cho bài toán nhờ đạt độ chính xác cao và tốc độ suy luận nhanh, đáp ứng tốt các yêu cầu của hệ thống giám sát giao thông thời gian thực.
+Academic team project — CS231 Introduction to Computer Vision, University of Information Technology (VNU-HCM).
+
+- Đoàn Hữu Gia Bình
+- Phan Công Thiện
+- Nguyễn Tấn Phát
+- Nguyễn Trường Nguyên
+
+Supervisor: Mai Tiến Dũng.
