@@ -1,5 +1,9 @@
 """ZeroGPU entry point; keep the local Gradio application reusable."""
 import spaces  # Initialize CUDA emulation before importing torch through inference.
+import logging
+
+# ZeroGPU's internal HTTP URLs can include temporary allocation credentials.
+logging.getLogger("httpx").setLevel(logging.WARNING)
 
 from inference import MODEL_SPECS, detect, get_model
 
