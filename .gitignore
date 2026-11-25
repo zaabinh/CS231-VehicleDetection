@@ -1,3 +1,6 @@
 data
 .venv
 old
+.venv-demo
+space
+__pycache__/

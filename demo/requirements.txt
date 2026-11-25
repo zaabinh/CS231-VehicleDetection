@@ -1,0 +1,10 @@
+# Demo runtime only (the root requirements.txt covers the training notebooks).
+# Versions verified locally with Python 3.12. The CPU index keeps the install small; drop it for a CUDA build.
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch==2.15.0
+torchvision==0.29.2
+ultralytics==8.4.218
+gradio==6.32.0
+opencv-python==5.1.0.95
+numpy==2.5.5
+pandas==3.1.1
