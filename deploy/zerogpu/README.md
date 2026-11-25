@@ -8,7 +8,7 @@ sdk_version: 6.32.0
 python_version: "3.12"
 app_file: demo/space.py
 pinned: false
-short_description: Compare trained YOLOv8, Faster R-CNN and SSD vehicle detectors
+short_description: Vehicle detection with YOLOv8, Faster R-CNN and SSD
 ---
 
 # Vehicle Detection Benchmark

@@ -4,6 +4,7 @@ import hashlib
 from pathlib import Path
 
 from huggingface_hub import CommitOperationAdd, HfApi, SpaceHardware
+from huggingface_hub.errors import RepositoryNotFoundError
 from huggingface_hub.utils import get_stored_tokens
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -26,8 +27,12 @@ def main():
     files["README.md"] = ROOT / "deploy/zerogpu/README.md"
     files["requirements.txt"] = ROOT / "deploy/zerogpu/requirements.txt"
     files["packages.txt"] = ROOT / "deploy/zerogpu/packages.txt"
-    print(api.create_repo(args.repo, repo_type="space", space_sdk="gradio",
-                          space_hardware=SpaceHardware.ZERO_A10G, private=False, exist_ok=True), flush=True)
+    try:
+        api.space_info(args.repo)
+    except RepositoryNotFoundError:
+        api.create_repo(args.repo, repo_type="space", space_sdk="gradio",
+                        space_hardware=SpaceHardware.ZERO_A10G, private=False)
+    print(f"https://huggingface.co/spaces/{args.repo}", flush=True)
     runtime = api.get_space_runtime(args.repo)
     if (runtime.requested_hardware or runtime.hardware) != "zero-a10g":
         raise RuntimeError("Existing Space is not on free ZeroGPU; upload stopped.")
